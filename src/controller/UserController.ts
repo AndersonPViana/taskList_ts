@@ -5,7 +5,7 @@ import { User } from "../entity/User";
 
 const userRepository = AppDataSource.getRepository(User)
 
-export class UserController {
+class UserController {
   async store(req, res) {
     const userExist = await userRepository.findOne({
       where: { email: req.body.email }
@@ -36,3 +36,5 @@ export class UserController {
     })
   }
 }
+
+export default new UserController();

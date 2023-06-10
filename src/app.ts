@@ -21,5 +21,4 @@ app.use(logger("dev"))
 connectionServerDB();
 
 // Configurando Rotas 
-app.use("/users", routes);
-app.use("/", (req, res) => res.send("API feita"))
+app.use(routes);
