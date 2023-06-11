@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import * as Yup from "yup";
+import * as bcrypt from "bcrypt";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
@@ -18,7 +19,7 @@ class UserController {
       return res.status(400).json({ message: "validation failure" });
     }
 
-    const { id, name, email, password_hash } = req.body;
+    const { id, name, email, password} = req.body;
 
     const userExist = await userRepository.findOne({ where: { email } });
 
@@ -26,6 +27,8 @@ class UserController {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const password_hash = await bcrypt.hash(password, 8);
+    
     const newUser = new User(name, email, password_hash);
 
     try {
@@ -37,7 +40,8 @@ class UserController {
     return res.json({
       id,
       name, 
-      email
+      email,
+      password_hash
     })
   }
 }
