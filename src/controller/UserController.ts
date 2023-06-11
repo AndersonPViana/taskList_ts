@@ -3,7 +3,7 @@ import * as express from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 
-const userRepository = AppDataSource.getRepository(User)
+export const userRepository = AppDataSource.getRepository(User)
 
 class UserController {
   async store(req, res) {
