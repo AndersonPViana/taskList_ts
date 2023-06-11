@@ -17,7 +17,8 @@
       "morgan": "^1.10.0",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "0.3.16"
+      "typeorm": "0.3.16",
+      "yup": "^1.2.0"
    },
    "scripts": {
       "dev": "nodemon --exec ts-node src/server.ts",
