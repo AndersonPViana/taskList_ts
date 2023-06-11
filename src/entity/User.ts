@@ -1,7 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
+
+    constructor(name: string, email: string, password_hash: string){
+        this.name = name;
+        this.email = email;
+        this.password_hash = password_hash;
+    }
 
     @PrimaryGeneratedColumn()
     id: number
