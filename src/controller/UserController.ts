@@ -40,8 +40,7 @@ class UserController {
     return res.json({
       id,
       name, 
-      email,
-      password_hash
+      email
     })
   }
 }
