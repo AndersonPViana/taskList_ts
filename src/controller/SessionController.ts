@@ -1,7 +1,9 @@
+import { Request, Response } from "express";
+
 import { userRepository } from "./UserController";
 
 class SessionController {
-  async store(req, res) {
+  async store(req: Request, res: Response) {
     const { email, password_hash } = req.body;
 
     const user = await userRepository.findOne({ where: { email } });

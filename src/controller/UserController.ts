@@ -1,4 +1,4 @@
-import * as express from "express";
+import { Request, Response } from "express"
 import * as Yup from "yup";
 
 import { AppDataSource } from "../data-source";
@@ -7,7 +7,7 @@ import { User } from "../entity/User";
 export const userRepository = AppDataSource.getRepository(User)
 
 class UserController {
-  async store(req, res) {
+  async store(req: Request, res: Response) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().email().required(),
