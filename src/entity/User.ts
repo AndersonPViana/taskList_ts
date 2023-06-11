@@ -10,20 +10,20 @@ export class User {
     }
 
     @PrimaryGeneratedColumn()
-    id: number
+    readonly id: number
 
     @Column()
-    name: string
+    public name: string
 
     @Column()
-    email: string
+    public email: string
 
     @Column()
-    password_hash: string
+    public password_hash: string
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
-    created_at: Date
+    readonly created_at: Date
 
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
-    updated_at: Date
+    protected updated_at: Date
 }
