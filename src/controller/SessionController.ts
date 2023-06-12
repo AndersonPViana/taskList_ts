@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 
 import { userRepository } from "./UserController";
-import { authConfig } from "../config/auth";
+import authConfig from "../config/authConfig";
 
 class SessionController {
   async store(req: Request, res: Response) {
