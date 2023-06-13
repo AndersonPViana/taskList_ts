@@ -5,7 +5,7 @@ import { userRepository } from "../controller/UserController";
 import authConfig from "../config/authConfig";
 
 interface JwtPayload {
-  id: string
+  id: number
 }
 
 export default async (req: Request, res: Response, next: NextFunction) => {
@@ -20,11 +20,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {id} = jwt.verify(token, authConfig.secret) as JwtPayload
 
-    const idNumber = Number(id);
+    const user = await userRepository.findOne({ where: { id: id } });
 
-    const user = await userRepository.findOne({ where: {id: idNumber} });
-
-    if(user.id !== idNumber) {
+    if(user.id !== id) {
       return res.status(401).json({ message: "User not exist" });
     }
     
