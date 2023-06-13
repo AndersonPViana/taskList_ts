@@ -27,10 +27,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if(user.id !== idNumber) {
       return res.status(401).json({ message: "User not exist" });
     }
-
+    
     return next();
   } catch(err) {
     return res.status(401).json({ message: "Token invalid" });
   }
-
 }
