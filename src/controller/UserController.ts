@@ -1,9 +1,15 @@
 import { Request, Response} from "express";
+import * as jwt from "jsonwebtoken";
 import * as Yup from "yup";
 import * as bcrypt from "bcrypt";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
+import authConfig from "../config/authConfig";
+
+interface JwtPayload {
+  id: number
+}
 
 export const userRepository = AppDataSource.getRepository(User);
 
@@ -42,28 +48,6 @@ class UserController {
       name, 
       email
     })
-  }
-
-  async update(req: Request, res: Response) {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
-      oldPassword: Yup.string().min(8),
-      password: Yup.string()
-        .min(8)
-        .when("oldPassword", (oldPassword, field) => 
-          oldPassword ? field.required() : field
-        ),
-      confirmPassword: Yup.string().when("password", (password, field) =>
-      password ? field.required().oneOf([Yup.ref("password")]) : field
-      ),  
-    });
-
-    if(!(await schema.isValid(req.body))){
-      return res.status(400).json({ message: "validation failure" });
-    }
-
-    const { email, oldPassword } = req.body;
   }
 }
 
