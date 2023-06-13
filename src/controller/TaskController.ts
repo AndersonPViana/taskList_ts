@@ -43,6 +43,8 @@ class TaskController {
 
     const newTask = new Task(task, check, user);
 
+    await taskRepository.save(newTask);
+
     res.json(newTask.task);
   }
 }
