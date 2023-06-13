@@ -5,11 +5,6 @@ import * as bcrypt from "bcrypt";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
-import authConfig from "../config/authConfig";
-
-interface JwtPayload {
-  id: number
-}
 
 export const userRepository = AppDataSource.getRepository(User);
 

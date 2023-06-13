@@ -4,9 +4,10 @@ import { User } from "./User";
 
 @Entity()
 export class Task {
-  constructor(task: string, check: boolean) {
+  constructor(task: string, check: boolean, user: User) {
     this.task = task; 
     this.check = check;
+    this.user = user;
   }
 
   @PrimaryGeneratedColumn()
