@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
-import * as jwt from "jsonwebtoken";
 import * as Yup from "yup";
 
 import { Task } from "../entity/Task";
 import { AppDataSource } from "../data-source";
-import { userRepository } from "./UserController";
 import SessionController from "./SessionController";
-
+import { userRepository } from "./UserController";
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
@@ -22,15 +20,9 @@ class TaskController {
 
     const tokenId = SessionController.tokenId;
 
-    const id = tokenId(req.headers.authorization);
+    const id = await tokenId(req.headers.authorization);
 
-    if(!id) {
-      return res.status(401).json({ message: "Token not exist" });
-    }
-
-    const idNumber = Number(id);
-
-    const user = await userRepository.findOne({where: { id: idNumber }});
+    const user = await userRepository.findOne({ where: { id: id } })
 
     if(!user){
       return res.status(401).json({ message: "User not exist" });
