@@ -14,3 +14,4 @@ routes.post("/sessions", SessionController.store);
 
 // Tasks
 routes.post("/tasks", TaskController.store);
+routes.get("/tasks", TaskController.index);

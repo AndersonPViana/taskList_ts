@@ -5,10 +5,27 @@ import { Task } from "../entity/Task";
 import { AppDataSource } from "../data-source";
 import SessionController from "./SessionController";
 import { userRepository } from "./UserController";
+import { User } from "../entity/User";
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
 class TaskController {
+  async index(req: Request, res: Response) {
+    const tokenId = SessionController.tokenId;
+
+    const id = await tokenId(req.headers.authorization);
+
+    const tasks = await taskRepository.find({ relations: { user: true } })
+
+    const tasksUser = tasks.filter((task) => { 
+      if(task.user.id === id && task.check === false) {
+        return task.task;
+      }  
+    });
+
+    res.json(tasksUser);
+  }
+
   async store(req: Request, res: Response) {  
     const schema = Yup.object().shape({
       task: Yup.string().required(),
