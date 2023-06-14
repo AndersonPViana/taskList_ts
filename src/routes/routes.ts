@@ -8,6 +8,7 @@ export const routes = Router();
 
 // Users
 routes.post("/users", UserController.store);
+routes.put("/users", UserController.update);
 
 // Sessions
 routes.post("/sessions", SessionController.store);

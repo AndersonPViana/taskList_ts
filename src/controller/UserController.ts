@@ -5,6 +5,7 @@ import * as bcrypt from "bcrypt";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
+import SessionController from "./SessionController";
 
 export const userRepository = AppDataSource.getRepository(User);
 
@@ -43,6 +44,40 @@ class UserController {
       name, 
       email
     })
+  }
+
+  async update(req: Request, res: Response) {
+    const tokenId = SessionController.tokenId;
+
+    const id = await tokenId(req.headers.authorization);
+
+    if(!id) {
+      return res.status(401).json({ message: "Token not exist" });
+    }
+
+    const user = await userRepository.findOne({ where: {id: id} });
+
+    const { email, oldPassword, password } = req.body;
+
+    if(email !== user.email) {
+      const userExist = await userRepository.findOne({
+        where: { email },
+      })
+
+      if(userExist) {
+        return res.status(400).json({ message: "user already exists" })
+      }
+    }
+
+    if(oldPassword && !(await bcrypt.compare(oldPassword, user.password_hash))){
+      return res.status(401).json({ message: "incorrect password" });
+    }
+
+    const newPassword = await bcrypt.hash(password, 8);
+
+    await userRepository.update(id, { password_hash: newPassword });
+
+    res.status(200).json({ message: "updated password" })
   }
 }
 
