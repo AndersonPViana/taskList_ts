@@ -5,8 +5,12 @@ import * as jwt from "jsonwebtoken";
 import { userRepository } from "./UserController";
 import authConfig from "../config/authConfig";
 
+interface JwtPayload {
+  id: number
+}
+
 class SessionController {
-  async store(req: Request, res: Response) {
+  async store(req: Request, res: Response): Promise<any> {
     const { email, password } = req.body;
 
     const user = await userRepository.findOne({ where: { email } });
@@ -31,6 +35,16 @@ class SessionController {
         expiresIn: authConfig.expiresIn
       })
     });
+  }
+
+  async tokenId(headersAuthorization: string){
+    const authHeader = headersAuthorization;
+
+    const [, token] = authHeader.split(" ");
+
+    const { id } = jwt.verify(token, authConfig.secret) as JwtPayload; 
+
+    return id; 
   }
 }
 

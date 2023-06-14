@@ -3,13 +3,10 @@ import * as jwt from "jsonwebtoken";
 import * as Yup from "yup";
 
 import { Task } from "../entity/Task";
-import authConfig from "../config/authConfig";
 import { AppDataSource } from "../data-source";
 import { userRepository } from "./UserController";
+import SessionController from "./SessionController";
 
-interface JwtPayload {
-  id: number
-}
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
@@ -23,17 +20,17 @@ class TaskController {
       return res.status(400).json({ message: "failed to register" });
     }
 
-    const authHeader = req.headers.authorization;
+    const tokenId = SessionController.tokenId;
 
-    if(!authHeader) {
+    const id = tokenId(req.headers.authorization);
+
+    if(!id) {
       return res.status(401).json({ message: "Token not exist" });
     }
 
-    const [, token] = authHeader.split(" ");
+    const idNumber = Number(id);
 
-    const { id } = jwt.verify(token, authConfig.secret) as JwtPayload;
-
-    const user = await userRepository.findOne({where: {id: id}});
+    const user = await userRepository.findOne({where: { id: idNumber }});
 
     if(!user){
       return res.status(401).json({ message: "User not exist" });
