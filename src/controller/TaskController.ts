@@ -10,12 +10,42 @@ import { User } from "../entity/User";
 export const taskRepository = AppDataSource.getRepository(Task);
 
 class TaskController {
+  async update(req: Request, res: Response) {
+    const tokenId = SessionController.tokenId;
+
+    const id = await tokenId(req.headers.authorization);
+
+    if(!id) {
+      return res.status(401).json({ message: "Token not exist" })
+    }
+
+    const { id_task } = req.params;
+
+    const { check } = req.body;
+
+    const tasks = await taskRepository.find({ relations: { user: true } });
+
+    const tasksUser = tasks.filter((task) => { 
+      if(task.user.id === id && task.check === false) {
+        return task.task;
+      }  
+    });
+
+    const taskUpdate = await taskRepository.update(id_task, {check: check});
+
+    return res.json(tasksUser);
+  }
+
   async index(req: Request, res: Response) {
     const tokenId = SessionController.tokenId;
 
     const id = await tokenId(req.headers.authorization);
 
-    const tasks = await taskRepository.find({ relations: { user: true } })
+    if(!id) {
+      return res.status(401).json({ message: "Token not exist" });
+    }
+
+    const tasks = await taskRepository.find({ relations: { user: true } });
 
     const tasksUser = tasks.filter((task) => { 
       if(task.user.id === id && task.check === false) {
@@ -39,7 +69,7 @@ class TaskController {
 
     const id = await tokenId(req.headers.authorization);
 
-    const user = await userRepository.findOne({ where: { id: id } })
+    const user = await userRepository.findOne({ where: { id: id } });
 
     if(!user){
       return res.status(401).json({ message: "User not exist" });
