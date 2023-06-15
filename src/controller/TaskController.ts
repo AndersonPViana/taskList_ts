@@ -5,7 +5,6 @@ import { Task } from "../entity/Task";
 import { AppDataSource } from "../data-source";
 import SessionController from "./SessionController";
 import { userRepository } from "./UserController";
-import { User } from "../entity/User";
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
@@ -23,17 +22,17 @@ class TaskController {
 
     const { check } = req.body;
 
-    const tasks = await taskRepository.find({ relations: { user: true } });
-
-    const tasksUser = tasks.filter((task) => { 
-      if(task.user.id === id && task.check === false) {
-        return task.task;
-      }  
-    });
-
     const taskUpdate = await taskRepository.update(id_task, {check: check});
 
-    return res.json(tasksUser);
+    return res.json(taskUpdate);
+  }
+
+  async deleta(req: Request, res: Response) {
+    const { id_task } = req.params;
+
+    await taskRepository.delete(id_task);
+
+    res.status(200).json({ message: "deleted task" })
   }
 
   async index(req: Request, res: Response) {

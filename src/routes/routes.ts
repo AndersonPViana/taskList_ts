@@ -17,3 +17,4 @@ routes.post("/sessions", SessionController.store);
 routes.post("/tasks", TaskController.store);
 routes.get("/tasks", TaskController.index);
 routes.put("/tasks/:id_task", TaskController.update);
+routes.delete("/tasks/:id_task", TaskController.deleta);
