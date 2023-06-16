@@ -5,30 +5,62 @@ import { Task } from "../entity/Task";
 import { AppDataSource } from "../data-source";
 import SessionController from "./SessionController";
 import { userRepository } from "./UserController";
+import { Console } from "console";
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
 class TaskController {
   async update(req: Request, res: Response) {
+    const { id_task } = req.params;
+    const { check } = req.body;
+
     const tokenId = SessionController.tokenId;
 
     const id = await tokenId(req.headers.authorization);
 
     if(!id) {
-      return res.status(401).json({ message: "Token not exist" })
+      return res.status(400).json({ message: "token not exist" });
     }
 
-    const { id_task } = req.params;
+    const tasks = await taskRepository.find({ relations: { user: true } });
 
-    const { check } = req.body;
+    const taskUser = tasks.filter((task) => {
+      if(task.user.id === id && task.id === Number(id_task)) {
+        return task;
+      }
+    })
 
-    const taskUpdate = await taskRepository.update(id_task, {check: check});
+    if(taskUser.length === 0) {
+      return res.status(400).json({ message: "task does not belong to the user" })
+    }
 
-    return res.json(taskUpdate);
+    await taskRepository.update(id_task, {check: check});
+
+    return res.status(200).json({ message: "successfully updated task" });
   }
 
   async deleta(req: Request, res: Response) {
     const { id_task } = req.params;
+
+    const tokenId = SessionController.tokenId;
+
+    const id = await tokenId(req.headers.authorization);
+
+    if(!id) {
+      return res.status(400).json({ message: "token not exist" });
+    }
+
+    const tasks = await taskRepository.find({ relations: { user: true } });
+
+    const taskUser = tasks.filter((task) => {
+      if(task.user.id === id && task.id === Number(id_task)) {
+        return task;
+      }
+    })
+
+    if(taskUser.length === 0) {
+      return res.status(400).json({ message: "task does not belong to the user" })
+    }
 
     await taskRepository.delete(id_task);
 
@@ -41,7 +73,7 @@ class TaskController {
     const id = await tokenId(req.headers.authorization);
 
     if(!id) {
-      return res.status(401).json({ message: "Token not exist" });
+      return res.status(400).json({ message: "Token not exist" });
     }
 
     const tasks = await taskRepository.find({ relations: { user: true } });
@@ -71,7 +103,7 @@ class TaskController {
     const user = await userRepository.findOne({ where: { id: id } });
 
     if(!user){
-      return res.status(401).json({ message: "User not exist" });
+      return res.status(400).json({ message: "User not exist" });
     }
 
     const { task, check } = req.body;
