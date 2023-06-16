@@ -5,7 +5,6 @@ import { Task } from "../entity/Task";
 import { AppDataSource } from "../data-source";
 import SessionController from "./SessionController";
 import { userRepository } from "./UserController";
-import { Console } from "console";
 
 export const taskRepository = AppDataSource.getRepository(Task);
 
