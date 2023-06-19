@@ -66,7 +66,7 @@ class TaskController {
     res.status(200).json({ message: "deleted task" })
   }
 
-  async index(req: Request, res: Response) {
+  async index(req: Request, res: Response): Promise<any> {
     const tokenId = SessionController.tokenId;
 
     const id = await tokenId(req.headers.authorization);
@@ -86,7 +86,7 @@ class TaskController {
     res.json(tasksUser);
   }
 
-  async store(req: Request, res: Response) {  
+  async store(req: Request, res: Response): Promise<any> {  
     const schema = Yup.object().shape({
       task: Yup.string().required(),
     });

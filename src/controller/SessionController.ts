@@ -37,7 +37,7 @@ class SessionController {
     });
   }
 
-  async tokenId(headersAuthorization: string){
+  async tokenId(headersAuthorization: string): Promise<number>{
     const authHeader = headersAuthorization;
 
     const [, token] = authHeader.split(" ");

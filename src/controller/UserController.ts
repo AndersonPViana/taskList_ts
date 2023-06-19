@@ -10,7 +10,7 @@ import SessionController from "./SessionController";
 export const userRepository = AppDataSource.getRepository(User);
 
 class UserController {
-  async store(req: Request, res: Response) {
+  async store(req: Request, res: Response): Promise<any> {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().email().required(),
@@ -46,7 +46,7 @@ class UserController {
     })
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<any> {
     const tokenId = SessionController.tokenId;
 
     const id = await tokenId(req.headers.authorization);
@@ -77,7 +77,7 @@ class UserController {
 
     await userRepository.update(id, { password_hash: newPassword });
 
-    res.status(200).json({ message: "updated password" })
+    return res.status(200).json({ message: "updated password" })
   }
 }
 
