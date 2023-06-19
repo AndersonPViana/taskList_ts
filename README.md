@@ -1,4 +1,4 @@
-# taskList_ts
+# TaskList_TS
 API FOR AN ONLINE TASK LIST TYPESCRIPT
 
 Hello, I made this API that has express, typeORM, dotenv, jwt, bcrypt, cors, morgan and yup.
